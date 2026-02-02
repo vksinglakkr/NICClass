@@ -17,3 +17,26 @@ async function askAI(msg) {
   const data = await res.json();
   return data.choices[0].message.content;
 }
+
+function send() {
+  const input = document.getElementById("userInput");
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  addMessage(msg, "user");
+  input.value = "";
+
+  setTimeout(() => {
+    addMessage("This is a test reply from bot.", "bot");
+  }, 500);
+}
+
+function addMessage(text, type) {
+  const chat = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = type;
+  div.innerText = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
