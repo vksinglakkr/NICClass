@@ -1,29 +1,19 @@
-function send() {
-  let input = document.getElementById("userInput");
-  let msg = input.value.trim();
-  if(!msg) return;
+// app.js (LOCAL TEST ONLY — DO NOT PUSH)
+const OPENAI_API_KEY = "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";
 
-  addMessage(msg, "user");
-  input.value = "";
+async function askAI(msg) {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: msg }]
+    })
+  });
 
-  setTimeout(() => {
-    addMessage(getReply(msg), "bot");
-  }, 600);
-}
-
-function addMessage(text, type) {
-  let div = document.createElement("div");
-  div.className = type;
-  div.innerText = text;
-  document.getElementById("chat").appendChild(div);
-}
-
-function getReply(msg) {
-  msg = msg.toLowerCase();
-
-  if(msg.includes("dc")) return "District Magistrate Kurukshetra: Shri …";
-  if(msg.includes("helpline")) return "District Helpline: 01744-XXXXXX";
-  if(msg.includes("gita")) return "International Gita Mahotsav is held every year in Kurukshetra.";
-
-  return "Please ask about district offices, services, helplines, or schemes.";
+  const data = await res.json();
+  return data.choices[0].message.content;
 }
